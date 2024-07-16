@@ -8,12 +8,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
   formData.append("file", theFile);
   formData.append("model", "whisper-1");
 
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing OpenAI API key in environment variables");
+  }
+
   const response = await fetch(
     "https://api.openai.com/v1/audio/transcriptions",
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: formData,
     }
